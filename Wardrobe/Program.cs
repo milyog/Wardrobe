@@ -1,4 +1,6 @@
 
+using Wardrobe.Services.PairOfShoesService;
+
 namespace Wardrobe
 {
     public class Program
@@ -13,6 +15,7 @@ namespace Wardrobe
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IPairOfShoesService, PairOfShoesService>();
 
             var app = builder.Build();
 

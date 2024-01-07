@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using System.Reflection;
 using Wardrobe.Models;
+using Wardrobe.Services.PairOfShoesService;
 
 namespace Wardrobe.Controllers
 {
@@ -10,36 +11,17 @@ namespace Wardrobe.Controllers
     [ApiController]
     public class PairOfShoesController : ControllerBase
     {
-        private static List<PairOfShoes> pairsOfShoes = new List<PairOfShoes>
-            {
-                new PairOfShoes
-                {
-                    Id = 1,
-                    Brand = "Crockett & Jones",
-                    Model = "Boston",
-                    Material ="Suede",
-                    Category = "Loafer",
-                    Size = "7",
-                    Description = "Mörkbrun loafer med lädersula.",
-                    TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
-                },
-                   new PairOfShoes
-                {
-                    Id = 2,
-                    Brand = "New Balance",
-                    Model = "880 v. 13",
-                    Material ="Synthetic",
-                    Category = "Running shoe",
-                    Size = "9",
-                    Description = "Neutral mörkblå löparsko med god dämpning.",
-                    TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
-                }
-            };
+        private readonly IPairOfShoesService _pairOfShoesService;
+
+        public PairOfShoesController(IPairOfShoesService pairOfShoesService) 
+        {
+            this._pairOfShoesService = pairOfShoesService;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<PairOfShoes>>> GetAllPairsOfShoes()
         {
-            return Ok(pairsOfShoes);
+            return _pairOfShoesService.GetAllPairsOfShoes();
         }
 
         //[HttpGet] Alternativt
@@ -47,52 +29,43 @@ namespace Wardrobe.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PairOfShoes>> GetSinglePairOfShoes(int id)
         {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            var result = _pairOfShoesService.GetSinglePairOfShoes(id);
 
-            if (singlePairOfShoes is null) 
+            if (result is null)
                 return NotFound("Ingen träff.");
 
-            return Ok(singlePairOfShoes);
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<PairOfShoes>>> AddPairOfShoes(PairOfShoes shoes)
         {
-            pairsOfShoes.Add(shoes);
-            return Ok(pairsOfShoes);
+            var result = _pairOfShoesService.AddPairOfShoes(shoes);
+
+            return Ok(result);
         }
 
         // OBS! Uppdaterar just nu alla värden. Är det det du vill?
         [HttpPut("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id, PairOfShoes request)
         {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            var result = _pairOfShoesService.UpdatePairOfShoes(id, request);
 
-            if (singlePairOfShoes is null)
+            if (result is null)
                 return NotFound("Ingen träff.");
 
-            singlePairOfShoes.Brand= request.Brand;
-            singlePairOfShoes.Model = request.Model;
-            singlePairOfShoes.Material= request.Material;
-            singlePairOfShoes.Category= request.Category;
-            singlePairOfShoes.Size= request.Size;
-            singlePairOfShoes.Description= request.Description;
-            singlePairOfShoes.TimesUsed= request.TimesUsed;
-
-            return Ok(singlePairOfShoes);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> DeletePairOfShoes(int id)
         {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            var result = _pairOfShoesService.DeletePairOfShoes(id);
 
-            if (singlePairOfShoes is null)
+            if (result is null) 
                 return NotFound("Ingen träff.");
 
-            pairsOfShoes.Remove(singlePairOfShoes);
-
-            return Ok(pairsOfShoes);
+            return Ok(result);
         }
     }
 }
