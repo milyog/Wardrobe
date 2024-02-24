@@ -1,4 +1,5 @@
 
+using Wardrobe.Data;
 using Wardrobe.Services.PairOfShoesService;
 
 namespace Wardrobe
@@ -16,6 +17,7 @@ namespace Wardrobe
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPairOfShoesService, PairOfShoesService>();
+            builder.Services.AddDbContext<DataContext>();
 
             var app = builder.Build();
 
