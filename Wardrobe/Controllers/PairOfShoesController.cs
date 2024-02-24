@@ -62,7 +62,7 @@ namespace Wardrobe.Controllers
         [HttpPost]
         public async Task<ActionResult<List<PairOfShoes>>> AddPairOfShoes(PairOfShoes shoes)
         {
-            var result = _pairOfShoesService.AddPairOfShoes(shoes);
+            var result = await _pairOfShoesService.AddPairOfShoes(shoes);
 
             return Ok(result);
         }
