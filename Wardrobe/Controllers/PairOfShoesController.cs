@@ -21,15 +21,37 @@ namespace Wardrobe.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PairOfShoes>>> GetAllPairsOfShoes()
         {
-            return _pairOfShoesService.GetAllPairsOfShoes();
+            var result = await _pairOfShoesService.GetAllPairsOfShoes();
+
+            if (result.Count == 0)
+                return NotFound("Ingen träff.");            // Nu finns resultatkontrollen i både service och controller. Kollar dessutom null.
+
+            return Ok(result);
+            // return await _pairOfShoesService.GetAllPairsOfShoes();
         }
 
-        //[HttpGet] Alternativt
-        //[Route("{id}")] 
+        //[HttpGet] 
+        //public async Task<ActionResult<List<PairOfShoes>?>> UpdatePairOfShoes(int id, PairOfShoes request)
+        //{
+        //    var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+
+        //    if (singlePairOfShoes is null)
+        //        return null;
+
+        //    singlePairOfShoes.Brand = request.Brand;
+        //    singlePairOfShoes.Model = request.Model;
+        //    singlePairOfShoes.Material = request.Material;
+        //    singlePairOfShoes.Category = request.Category;
+        //    singlePairOfShoes.Size = request.Size;
+        //    singlePairOfShoes.Description = request.Description;
+
+        //    return await _pairOfShoesService.UpdatePairOfShoes();  
+        //}
+
         [HttpGet("{id}")]
         public async Task<ActionResult<PairOfShoes>> GetSinglePairOfShoes(int id)
         {
-            var result = _pairOfShoesService.GetSinglePairOfShoes(id);
+            var result = await _pairOfShoesService.GetSinglePairOfShoes(id);
 
             if (result is null)
                 return NotFound("Ingen träff.");
@@ -49,7 +71,7 @@ namespace Wardrobe.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id, PairOfShoes request)
         {
-            var result = _pairOfShoesService.UpdatePairOfShoes(id, request);
+            var result = await _pairOfShoesService.UpdatePairOfShoes(id, request);
 
             if (result is null)
                 return NotFound("Ingen träff.");
@@ -60,9 +82,9 @@ namespace Wardrobe.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> DeletePairOfShoes(int id)
         {
-            var result = _pairOfShoesService.DeletePairOfShoes(id);
+            var result = await _pairOfShoesService.DeletePairOfShoes(id);
 
-            if (result is null) 
+            if (result is null)
                 return NotFound("Ingen träff.");
 
             return Ok(result);

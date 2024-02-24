@@ -4,11 +4,11 @@ namespace Wardrobe.Services.PairOfShoesService
 {
     public interface IPairOfShoesService
     {
-        List<PairOfShoes> GetAllPairsOfShoes();
-        PairOfShoes? GetSinglePairOfShoes(int id);
-        List<PairOfShoes> AddPairOfShoes(PairOfShoes shoes);
-        List<PairOfShoes>? UpdatePairOfShoes(int id, PairOfShoes request);
-        List<PairOfShoes>? DeletePairOfShoes(int id);
+        Task<List<PairOfShoes>> GetAllPairsOfShoes();
+        Task<PairOfShoes?> GetSinglePairOfShoes(int id);
+        Task<List<PairOfShoes>?> AddPairOfShoes(PairOfShoes shoes);
+        Task<List<PairOfShoes>?> UpdatePairOfShoes(int id, PairOfShoes request);
+        Task<List<PairOfShoes>?> DeletePairOfShoes(int id);
 
     }
 }

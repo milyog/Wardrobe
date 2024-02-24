@@ -1,11 +1,13 @@
-﻿using Wardrobe.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Wardrobe.Data;
+using Wardrobe.Models;
 
 namespace Wardrobe.Services.PairOfShoesService
 {
     public class PairOfShoesService : IPairOfShoesService
-    {
+    {   /*
         private static List<PairOfShoes> pairsOfShoes = new List<PairOfShoes>
-            {
+            {   
                 new PairOfShoes
                 {
                     Id = 1,
@@ -15,7 +17,7 @@ namespace Wardrobe.Services.PairOfShoesService
                     Category = "Loafer",
                     Size = "7",
                     Description = "Mörkbrun loafer med lädersula.",
-                    TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
+                    //TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
                 },
                    new PairOfShoes
                 {
@@ -26,35 +28,46 @@ namespace Wardrobe.Services.PairOfShoesService
                     Category = "Running shoe",
                     Size = "9",
                     Description = "Neutral mörkblå löparsko med god dämpning.",
-                    TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
+                    //TimesUsed = new List<WearCounter>() { new WearCounter(1), new WearCounter(2) }
                 }
-            };
-        public List<PairOfShoes> AddPairOfShoes(PairOfShoes shoes)
+            };*/
+
+        private readonly DataContext _context;
+        public PairOfShoesService(DataContext context)
         {
-            pairsOfShoes.Add(shoes);
-            return pairsOfShoes;
+            _context = context;
         }
 
-        public List<PairOfShoes>? DeletePairOfShoes(int id)
+        public async Task<List<PairOfShoes>> AddPairOfShoes(PairOfShoes shoes)
         {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            _context.PairOfShoes.Add(shoes);
+            _context.SaveChanges();
+
+            return await _context.PairOfShoes.ToListAsync();
+        }
+
+        public async Task<List<PairOfShoes>?> DeletePairOfShoes(int id)
+        {
+            var singlePairOfShoes = await _context.PairOfShoes.FindAsync(id);
 
             if (singlePairOfShoes is null)
                 return null;
 
-            pairsOfShoes.Remove(singlePairOfShoes);
+            _context.PairOfShoes.Remove(singlePairOfShoes);
+            await _context.SaveChangesAsync();
 
+            return await _context.PairOfShoes.ToListAsync();
+        }
+
+        public async Task<List<PairOfShoes>> GetAllPairsOfShoes()
+        {
+            var pairsOfShoes = await _context.PairOfShoes.ToListAsync();
             return pairsOfShoes;
         }
 
-        public List<PairOfShoes> GetAllPairsOfShoes()
+        public async Task<PairOfShoes>? GetSinglePairOfShoes(int id)
         {
-            return pairsOfShoes;
-        }
-
-        public PairOfShoes? GetSinglePairOfShoes(int id)
-        {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            var singlePairOfShoes = await _context.PairOfShoes.FindAsync(id);
 
             if (singlePairOfShoes is null)
                 return null;
@@ -62,9 +75,9 @@ namespace Wardrobe.Services.PairOfShoesService
             return singlePairOfShoes;
         }
 
-        public List<PairOfShoes>? UpdatePairOfShoes(int id, PairOfShoes request)
+        public async Task<List<PairOfShoes>?> UpdatePairOfShoes(int id, PairOfShoes request)
         {
-            var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
+            var singlePairOfShoes = await _context.PairOfShoes.FindAsync(id);
 
             if (singlePairOfShoes is null)
                 return null;
@@ -75,9 +88,12 @@ namespace Wardrobe.Services.PairOfShoesService
             singlePairOfShoes.Category = request.Category;
             singlePairOfShoes.Size = request.Size;
             singlePairOfShoes.Description = request.Description;
-            singlePairOfShoes.TimesUsed = request.TimesUsed;
 
-            return pairsOfShoes; 
+            await _context.SaveChangesAsync();
+
+            return await _context.PairOfShoes.ToListAsync();
         }
+
+
     }
 }
