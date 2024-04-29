@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using System.Reflection;
@@ -11,47 +12,29 @@ namespace Wardrobe.Controllers
     [ApiController]
     public class PairOfShoesController : ControllerBase
     {
-        private readonly IPairOfShoesService _pairOfShoesService;
+        private readonly IPairOfShoesRepository _pairOfShoesRepository;
 
-        public PairOfShoesController(IPairOfShoesService pairOfShoesService) 
+        public PairOfShoesController(IPairOfShoesRepository pairOfShoesRepository) 
         {
-            this._pairOfShoesService = pairOfShoesService;
+            this._pairOfShoesRepository = pairOfShoesRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PairOfShoes>>> GetAllPairsOfShoes()
         {
-            var result = await _pairOfShoesService.GetAllPairsOfShoes();
+            var result = await _pairOfShoesRepository.GetAllPairsOfShoes();
 
             if (result.Count == 0)
                 return NotFound("Ingen träff.");            // Nu finns resultatkontrollen i både service och controller. Kollar dessutom null.
 
             return Ok(result);
-            // return await _pairOfShoesService.GetAllPairsOfShoes();
         }
 
-        //[HttpGet] 
-        //public async Task<ActionResult<List<PairOfShoes>?>> UpdatePairOfShoes(int id, PairOfShoes request)
-        //{
-        //    var singlePairOfShoes = pairsOfShoes.Find(x => x.Id == id);
-
-        //    if (singlePairOfShoes is null)
-        //        return null;
-
-        //    singlePairOfShoes.Brand = request.Brand;
-        //    singlePairOfShoes.Model = request.Model;
-        //    singlePairOfShoes.Material = request.Material;
-        //    singlePairOfShoes.Category = request.Category;
-        //    singlePairOfShoes.Size = request.Size;
-        //    singlePairOfShoes.Description = request.Description;
-
-        //    return await _pairOfShoesService.UpdatePairOfShoes();  
-        //}
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PairOfShoes>> GetSinglePairOfShoes(int id)
         {
-            var result = await _pairOfShoesService.GetSinglePairOfShoes(id);
+            var result = await _pairOfShoesRepository.GetSinglePairOfShoes(id);
 
             if (result is null)
                 return NotFound("Ingen träff.");
@@ -62,7 +45,7 @@ namespace Wardrobe.Controllers
         [HttpPost]
         public async Task<ActionResult<List<PairOfShoes>>> AddPairOfShoes(PairOfShoes shoes)
         {
-            var result = await _pairOfShoesService.AddPairOfShoes(shoes);
+            var result = await _pairOfShoesRepository.AddPairOfShoes(shoes);
 
             return Ok(result);
         }
@@ -71,7 +54,7 @@ namespace Wardrobe.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id, PairOfShoes request)
         {
-            var result = await _pairOfShoesService.UpdatePairOfShoes(id, request);
+            var result = await _pairOfShoesRepository.UpdatePairOfShoes(id, request);
 
             if (result is null)
                 return NotFound("Ingen träff.");
@@ -82,7 +65,7 @@ namespace Wardrobe.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> DeletePairOfShoes(int id)
         {
-            var result = await _pairOfShoesService.DeletePairOfShoes(id);
+            var result = await _pairOfShoesRepository.DeletePairOfShoes(id);
 
             if (result is null)
                 return NotFound("Ingen träff.");
