@@ -1,5 +1,5 @@
 ﻿namespace Wardrobe.Models
-{
+{ 
     public class PairOfShoes
     {
         public int Id { get; set; }
@@ -11,8 +11,5 @@
         public string Color { get; set; } = string.Empty;
         public string Size { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        
-        //public int UserId { get; set; }
-        //public User User { get; set; }
     }
 }
