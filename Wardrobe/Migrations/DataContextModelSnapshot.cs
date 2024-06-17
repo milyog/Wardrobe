@@ -17,16 +17,18 @@ namespace Wardrobe.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("ProductVersion", "7.0.19")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Wardrobe.Models.PairOfShoes", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -64,38 +66,36 @@ namespace Wardrobe.Migrations
                     b.ToTable("PairOfShoes");
                 });
 
-            modelBuilder.Entity("Wardrobe.Models.WearCounter", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PairOfShoesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TimesWorn")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("WearDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PairOfShoesId");
-
-                    b.ToTable("WearCounter");
-                });
-
-            modelBuilder.Entity("Wardrobe.Models.WearCounter", b =>
-                {
-                    b.HasOne("Wardrobe.Models.PairOfShoes", null)
-                        .WithMany("ShoeWearCounter")
-                        .HasForeignKey("PairOfShoesId");
-                });
-
             modelBuilder.Entity("Wardrobe.Models.PairOfShoes", b =>
                 {
-                    b.Navigation("ShoeWearCounter");
+                    b.OwnsMany("Wardrobe.Models.UsageLog", "UsageLogs", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("PairOfShoesId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("WearCounter")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime>("WearDate")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PairOfShoesId");
+
+                            b1.ToTable("UsageLog");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PairOfShoesId");
+                        });
+
+                    b.Navigation("UsageLogs");
                 });
 #pragma warning restore 612, 618
         }

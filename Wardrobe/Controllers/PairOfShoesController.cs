@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using System.Reflection;
 using Wardrobe.Models;
+using Wardrobe.Repository.UsageLogRepository;
 using Wardrobe.Services.PairOfShoesService;
 
 namespace Wardrobe.Controllers
@@ -13,10 +14,12 @@ namespace Wardrobe.Controllers
     public class PairOfShoesController : ControllerBase
     {
         private readonly IPairOfShoesRepository _pairOfShoesRepository;
+        private readonly IUsageLogRepository _usageLogRepository;
 
-        public PairOfShoesController(IPairOfShoesRepository pairOfShoesRepository) 
+        public PairOfShoesController(IPairOfShoesRepository pairOfShoesRepository, IUsageLogRepository usageLogRepository) 
         {
             this._pairOfShoesRepository = pairOfShoesRepository;
+            this._usageLogRepository = usageLogRepository;
         }
 
         [HttpGet]
@@ -43,7 +46,7 @@ namespace Wardrobe.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<PairOfShoes>>> AddPairOfShoes(PairOfShoes shoes)
+        public async Task<ActionResult<List<PairOfShoes>>> AddPairOfShoes([FromForm] PairOfShoes shoes)
         {
             var result = await _pairOfShoesRepository.AddPairOfShoes(shoes);
 
@@ -52,7 +55,7 @@ namespace Wardrobe.Controllers
 
         // OBS! Uppdaterar just nu alla värden. Är det det du vill?
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id, PairOfShoes request)
+        public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id,[FromForm] PairOfShoes request)
         {
             var result = await _pairOfShoesRepository.UpdatePairOfShoes(id, request);
 
@@ -71,6 +74,14 @@ namespace Wardrobe.Controllers
                 return NotFound("Ingen träff.");
 
             return Ok(result);
+        }
+
+        [HttpPost("{id}")]
+        public async Task<ActionResult> AddUsageLog(int id, UsageLog usageLog)
+        {
+            await _usageLogRepository.AddUsageLog(id, usageLog);
+
+            return Ok("Användning uppdaterad.");
         }
     }
 }

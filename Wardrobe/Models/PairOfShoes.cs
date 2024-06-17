@@ -11,5 +11,6 @@
         public string Color { get; set; } = string.Empty;
         public string Size { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public List<UsageLog> UsageLogs { get; set; } = new List<UsageLog>();
     }
 }
