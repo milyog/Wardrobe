@@ -31,7 +31,7 @@ namespace Wardrobe.Services.PairOfShoesService
         public async Task<List<PairOfShoes>?> AddPairOfShoes(PairOfShoes shoes)
         {
             _context.PairOfShoes.Add(shoes);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
 
             return await _context.PairOfShoes.ToListAsync();
         }
