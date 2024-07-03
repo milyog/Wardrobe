@@ -14,32 +14,38 @@ namespace Wardrobe.Repository.UsageLogRepository
             _context = context;
         }
 
-        public async Task AddUsageLog(int id, UsageLog usageLog)
+        public async Task AddUsageLog(int id)
         {
-            var newEntry = await _context.PairOfShoes
+            var newUsageLogEntry = await _context.PairOfShoes
                        .Include(x => x.UsageLogs) // Ensure UsageLogs are included
                        .FirstOrDefaultAsync(v => v.Id == id);
 
-            // var updateWearCounter = newEntry.UsageLogs.Select(x => x.WearCounter).LastOrDefault();
-            // Snabbare, men det gör inte någon skillad här.
-            var updatedEntryReverse = newEntry.UsageLogs.AsEnumerable().Reverse().Select(s => s.WearCounter).FirstOrDefault();
-            var updatedEntry = updatedEntryReverse + 1;
+            if (newUsageLogEntry is not null)
+            {            
+                int updatedUsageLogEntry = UpdateUsageLogEntry(newUsageLogEntry);
 
-            if (newEntry != null)
-            {
-                newEntry.UsageLogs.Add(
-                    new UsageLog 
-                    {   
+                newUsageLogEntry.UsageLogs.Add(
+                    new UsageLog
+                    {
                         WearDate = DateTime.Now,
-                        WearCounter = updatedEntry 
+                        WearCounter = updatedUsageLogEntry
                     });
 
-                await _context.SaveChangesAsync();  
+                await _context.SaveChangesAsync();
             }
             else
             {
                 throw new ArgumentException("Ej funnen");
             }
+        }
+
+        private static int UpdateUsageLogEntry(PairOfShoes newEntry)
+        {
+            // var wearCounterTotal = newEntry.UsageLogs.Select(x => x.WearCounter).LastOrDefault();
+            // Snabbare, men det gör inte någon skillad här.
+            var wearCounterTotal = newEntry.UsageLogs.AsEnumerable().Reverse().Select(s => s.WearCounter).FirstOrDefault();
+            var updatedWearCounterTotal = wearCounterTotal + 1;
+            return updatedWearCounterTotal;
         }
     }
 }

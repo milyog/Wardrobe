@@ -4,6 +4,6 @@ namespace Wardrobe.Repository.UsageLogRepository
 {
     public interface IUsageLogRepository
     {
-        Task AddUsageLog(int id, UsageLog usageLog);
+        Task AddUsageLog(int id);
     }
 }
