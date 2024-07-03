@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wardrobe.Data;
 using Wardrobe.Models;
+using Wardrobe.Repository.WardrobeItemRepository;
 
-namespace Wardrobe.Services.PairOfShoesService
-{
-    public class PairOfShoesRepository : IPairOfShoesRepository
+namespace Wardrobe.Services.WardrobeItemService
+{/*
+    public class WardrobeItemRepository : IWardrobeItemRepository<T> where T : WardrobeItem
     {  
         private readonly DataContext _context;
         public PairOfShoesRepository(DataContext context)
@@ -22,8 +23,8 @@ namespace Wardrobe.Services.PairOfShoesService
         {
             var singlePairOfShoes = await _context.PairOfShoes.FirstOrDefaultAsync(c => c.Id == id);//FindAsync(id);
 
-            //if (singlePairOfShoes is null)
-                //return null;
+            if (singlePairOfShoes is null)
+                return null;
 
             return singlePairOfShoes;
         } 
@@ -70,5 +71,5 @@ namespace Wardrobe.Services.PairOfShoesService
             return await _context.PairOfShoes.ToListAsync();
         }
 
-    }
+    }*/
 }

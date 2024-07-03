@@ -1,6 +1,6 @@
 ﻿namespace Wardrobe.Models
-{ 
-    public class PairOfShoes : WardrobeItem
+{
+    public abstract class WardrobeItem
     {
         public int Id { get; set; }
         public string Brand { get; set; } = string.Empty;

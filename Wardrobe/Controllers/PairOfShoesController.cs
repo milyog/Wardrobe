@@ -29,7 +29,7 @@ namespace Wardrobe.Controllers
 
             if (result.Count == 0)
                 return NotFound("Ingen träff.");            // Nu finns resultatkontrollen i både service och controller. Kollar dessutom null.
-
+             
             return Ok(result);
         }
 
@@ -53,7 +53,6 @@ namespace Wardrobe.Controllers
             return Ok(result);
         }
 
-        // OBS! Uppdaterar just nu alla värden. Är det det du vill?
         [HttpPut("{id}")]
         public async Task<ActionResult<List<PairOfShoes>>> UpdatePairOfShoes(int id,[FromForm] PairOfShoes request)
         {
@@ -77,9 +76,9 @@ namespace Wardrobe.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult> AddUsageLog(int id, UsageLog usageLog)
+        public async Task<ActionResult> AddUsageLog(int id)
         {
-            await _usageLogRepository.AddUsageLog(id, usageLog);
+            await _usageLogRepository.AddUsageLog(id);
 
             return Ok("Användning uppdaterad.");
         }
